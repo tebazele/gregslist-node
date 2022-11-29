@@ -45,7 +45,7 @@ export class CarsController extends BaseController {
     async remove(req, res, next) {
         try {
             const message = await carsService.remove(req.params.id)
-            return message
+            return res.send(message)
         } catch (error) {
             next(error)
         }
