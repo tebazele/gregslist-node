@@ -1,18 +1,32 @@
+import { BadRequest } from "@bcwdev/auth0provider/lib/Errors.js";
+import { dbContext } from "../db/DbContext.js";
+
 class JobsService {
-    getAll(query) {
-        throw new Error("Method not implemented.");
+    async getAll(query) {
+        const jobs = dbContext.Jobs.find(query)
+        return jobs
     }
-    getOne(id) {
-        throw new Error("Method not implemented.");
+    async getOne(id) {
+        const foundJob = dbContext.Jobs.findById(id)
+        if (!foundJob) throw new BadRequest('no job by that id')
+        return foundJob
     }
-    create(body) {
-        throw new Error("Method not implemented.");
+    async create(body) {
+        const newJob = dbContext.Jobs.create(body)
+        return newJob
     }
-    remove(id) {
-        throw new Error("Method not implemented.");
+    async remove(id) {
+        const deletedJob = await dbContext.Jobs.findById(id)
+        if (!deletedJob) throw new BadRequest('no job by that id')
+        await deletedJob.remove()
+        return `deleted job ${deletedJob.jobTitle}`
     }
-    update(id, body) {
-        throw new Error("Method not implemented.");
+    async update(id, body) {
+        const currJob = await dbContext.Jobs.findById(id)
+        if (!currJob) throw new BadRequest('no job at the id')
+        const updatedJob = currJob.update(body)
+        return updatedJob
+
     }
 
 }
